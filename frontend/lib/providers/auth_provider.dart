@@ -7,6 +7,8 @@ final authProvider = StateNotifierProvider<AuthProvider, AuthState>((ref) {
   return AuthProvider();
 });
 
+
+
 class AuthState {
   final String? token;
   final String? refreshToken;
@@ -36,6 +38,11 @@ class AuthProvider extends StateNotifier<AuthState> {
 
   AuthProvider() : super(const AuthState(isLoading: true, token: null, refreshToken: null)) {
     _init();
+  }
+
+  Future<String?> getToken() async {
+    await _ensurePrefsInitialized();
+    return _prefs?.getString('access_token');
   }
 
   Future<void> _init() async {

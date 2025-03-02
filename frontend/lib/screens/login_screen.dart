@@ -66,7 +66,7 @@ class LoginScreen extends ConsumerWidget {
                         _emailController.text,
                         _passwordController.text,
                       );
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => HomeScreen(),
