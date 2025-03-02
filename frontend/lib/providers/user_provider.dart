@@ -6,7 +6,7 @@ import 'auth_provider.dart';
 
 final userProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final auth = ref.watch(authProvider.notifier);
-  final token = await auth.getToken();
+  final token = auth.getAccessToken();
 
   if (token == null) {
     throw Exception('No authentication token available');

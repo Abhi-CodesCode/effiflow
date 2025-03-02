@@ -7,8 +7,6 @@ final authProvider = StateNotifierProvider<AuthProvider, AuthState>((ref) {
   return AuthProvider();
 });
 
-
-
 class AuthState {
   final String? token;
   final String? refreshToken;
@@ -38,11 +36,6 @@ class AuthProvider extends StateNotifier<AuthState> {
 
   AuthProvider() : super(const AuthState(isLoading: true, token: null, refreshToken: null)) {
     _init();
-  }
-
-  Future<String?> getToken() async {
-    await _ensurePrefsInitialized();
-    return _prefs?.getString('access_token');
   }
 
   Future<void> _init() async {
@@ -78,11 +71,13 @@ class AuthProvider extends StateNotifier<AuthState> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        await _prefs?.setString('access_token', data['access_token']);
-        await _prefs?.setString('refresh_token', data['refresh_token']);
+        final token = data['access_token'];
+        final refreshToken = data['refresh_token'];
+        await _prefs?.setString('access_token', token);
+        await _prefs?.setString('refresh_token', refreshToken);
         state = AuthState(
-          token: data['access_token'],
-          refreshToken: data['refresh_token'],
+          token: token,
+          refreshToken: refreshToken,
           isLoading: false,
         );
       } else {
@@ -128,5 +123,9 @@ class AuthProvider extends StateNotifier<AuthState> {
       state = state.copyWith(isLoading: false);
       throw Exception('Logout failed: ${e.toString()}');
     }
+  }
+
+  String? getAccessToken() {
+    return state.token;
   }
 }
